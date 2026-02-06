@@ -1,0 +1,83 @@
+﻿@page "/fetchproducts"
+
+@using System.Text.Json
+@using ClientAppdotnet.Service
+@inject ProductService ProductService
+
+
+
+<h3>Product List</h3>
+
+@if (isLoading)
+{
+    <p>Loading...</p>
+}
+else if (!string.IsNullOrEmpty(errorMessage))
+{
+    // Display the error message in red to make it more noticeable to the user.
+    <p style="color:red">@errorMessage</p>
+}
+else if (products != null)
+{
+    <ul>
+        @foreach (var product in products)
+        {
+            <li>
+                @product.Name - $@product.Price
+                <br />
+                Category: @product.Category?.Name
+            </li>
+
+        }
+    </ul>
+}
+
+@code {
+    private Product[]? products;
+    private bool isLoading = true;
+    private string? errorMessage;
+
+    [Inject] HttpClient Http { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            //copilot suggested to use the ProductService to fetch products, which is a good practice for separation of concerns.
+            products = await ProductService.GetProductsAsync();
+        }
+        catch (OperationCanceledException)
+        {
+            errorMessage = "The request timed out. Please try again.";
+        }
+        catch (HttpRequestException httpEx)
+        {
+            errorMessage = $"Network error: {httpEx.Message}";
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Unexpected error: {ex.Message}";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+
+
+    public class Product
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public double Price { get; set; }
+        public int Stock { get; set; }
+        public Category Category { get; set; }
+    }
+
+    public class Category 
+    { 
+        public int Id { get; set; } 
+        public string Name { get; set; } 
+    }
+}
