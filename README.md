@@ -1,0 +1,6 @@
+Copilot was use through out creating this full stack app. helping with debuging issues as they showed up and how to improve the code for more prefermance and readabilty.
+This was done by providing copilot with the errors from visual studio and added the fixes it suggests intill the error goes away. such as installing packages, using a service for the httpclient and moving dto into spaerate files. 
+another suggestion was to make the endpoint to get the project list async to improve performance and scalability and in the future it can use a db instead. also changing the return to include status code for better http semantics.
+for the json it gave the suggestion to create dtos and all of the changes thoughout to code to make it work. 
+copilot suggests configuring JSON options to use camelCase naming, which is a common convention in JavaScript and can help ensure that the JSON data sent to the frontend is easily consumable without needing additional transformations.
+don’t use AllowAnyOrigin in production. copilot suggests using specific origins for security reasons, but for development purposes, we can allow any origin to avoid CORS issues when testing with a frontend application running on a different port.
